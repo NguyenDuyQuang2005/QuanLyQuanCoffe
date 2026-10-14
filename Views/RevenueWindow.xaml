@@ -1,0 +1,33 @@
+<Window x:Class="QuanLiQuanCoffe.Views.RevenueWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Thống kê doanh thu"
+        Height="500" Width="780"
+        WindowStartupLocation="CenterOwner"
+        Background="#FFF7F2EC">
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,12">
+            <TextBlock Text="Kiểu" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox x:Name="cboKieu" Width="130" Height="28" SelectedIndex="1">
+                <ComboBoxItem Content="Theo ngày"/>
+                <ComboBoxItem Content="Theo tháng"/>
+            </ComboBox>
+            <TextBlock Text="Ngày" VerticalAlignment="Center" Margin="16,0,8,0"/>
+            <DatePicker x:Name="dpNgay" Width="160" Height="28"/>
+            <Button Content="Thống kê" Width="100" Height="28" Margin="12,0,0,0" Click="BtnThongKe_Click"/>
+        </StackPanel>
+        <TextBlock x:Name="txtTong" DockPanel.Dock="Bottom" FontSize="16" FontWeight="SemiBold"
+                   Foreground="#FF6F4E37" Margin="0,12,0,0"/>
+        <DataGrid x:Name="dgDoanhThu"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Mã HĐ" Binding="{Binding BillId}" Width="80"/>
+                <DataGridTextColumn Header="Thời gian thanh toán" Binding="{Binding DateCheckOut}" Width="180"/>
+                <DataGridTextColumn Header="Bàn" Binding="{Binding TableName}" Width="100"/>
+                <DataGridTextColumn Header="Giảm (%)" Binding="{Binding Discount}" Width="80"/>
+                <DataGridTextColumn Header="Doanh thu" Binding="{Binding Total, StringFormat=N0}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

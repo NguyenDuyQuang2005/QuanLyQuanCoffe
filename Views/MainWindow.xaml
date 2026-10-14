@@ -1,0 +1,56 @@
+<Window x:Class="QuanLiQuanCoffe.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quản lý quán cà phê"
+        Height="520" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF7F2EC">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="#FF6F4E37" Padding="10,8">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Content="Đăng xuất" Width="90" Height="28" Margin="4,0"
+                            Click="MenuDangXuat_Click"/>
+                    <Button Content="Thoát" Width="80" Height="28" Margin="4,0"
+                            Click="MenuThoat_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Gọi món" Width="90" Height="28" Margin="0,0,4,0"
+                            Click="BtnGoiMon_Click"/>
+                    <Button Content="Món / Danh mục" Width="120" Height="28" Margin="0,0,4,0"
+                            Click="BtnMon_Click"/>
+                    <Button Content="Bàn" Width="70" Height="28" Margin="0,0,4,0"
+                            Click="BtnBan_Click"/>
+                    <Button x:Name="btnNhanVien" Content="Nhân viên" Width="90" Height="28" Margin="0,0,4,0"
+                            Click="BtnNhanVien_Click"/>
+                    <Button x:Name="btnThongKe" Content="Thống kê" Width="90" Height="28"
+                            Click="BtnThongKe_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <StatusBar DockPanel.Dock="Bottom" Background="#FFE8DDD3">
+            <TextBlock x:Name="txtNguoiDung" Margin="8,0"/>
+        </StatusBar>
+
+        <Grid Margin="24">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock x:Name="txtChao"
+                           FontSize="22"
+                           FontWeight="SemiBold"
+                           Foreground="#FF4A3728"
+                           HorizontalAlignment="Center"/>
+                <TextBlock x:Name="txtQuyen"
+                           FontSize="14"
+                           Foreground="#FF6B5344"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"/>
+                <TextBlock Text="Chọn chức năng trên thanh nút để làm việc."
+                           FontSize="13"
+                           Foreground="#FF8A7464"
+                           HorizontalAlignment="Center"
+                           Margin="0,16,0,0"/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

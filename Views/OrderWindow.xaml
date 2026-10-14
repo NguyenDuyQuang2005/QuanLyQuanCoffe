@@ -1,0 +1,79 @@
+<Window x:Class="QuanLiQuanCoffe.Views.OrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gọi món và thanh toán"
+        Height="620" Width="980"
+        WindowStartupLocation="CenterOwner"
+        Background="#FFF7F2EC">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.1*"/>
+            <ColumnDefinition Width="1.4*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Margin="0,0,10,0">
+            <TextBlock DockPanel.Dock="Top" Text="Chọn bàn" FontSize="16" FontWeight="SemiBold" Foreground="#FF4A3728" Margin="0,0,0,8"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <WrapPanel x:Name="pnlBan"/>
+            </ScrollViewer>
+        </DockPanel>
+
+        <DockPanel Grid.Column="1">
+            <TextBlock x:Name="txtBanDangChon" DockPanel.Dock="Top" FontSize="16" FontWeight="SemiBold" Foreground="#FF4A3728" Margin="0,0,0,8"/>
+
+            <Border DockPanel.Dock="Top" Padding="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,8,0">
+                        <TextBlock Text="Danh mục"/>
+                        <ComboBox x:Name="cboDanhMuc" Height="28" DisplayMemberPath="Name" SelectedValuePath="Id"
+                                  SelectionChanged="CboDanhMuc_SelectionChanged" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                        <TextBlock Text="Món"/>
+                        <ComboBox x:Name="cboMon" Height="28" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                        <TextBlock Text="SL"/>
+                        <TextBox x:Name="txtSoLuong" Height="28" Text="1" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="3" Content="Thêm món" Width="90" Height="28" VerticalAlignment="Bottom" Click="BtnThemMon_Click"/>
+                </Grid>
+            </Border>
+
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Giảm giá (%)" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtGiamGia" Grid.Column="1" Height="28" Text="0" Margin="8,0" TextChanged="TxtGiamGia_TextChanged"/>
+                    <TextBlock x:Name="txtTongTien" Grid.Column="2" FontSize="16" FontWeight="SemiBold" Foreground="#FF6F4E37" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Content="Xóa món" Width="90" Click="BtnXoaMon_Click"/>
+                    <Button Content="Thanh toán" Width="110" Click="BtnThanhToan_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <DataGrid x:Name="dgHoaDon"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Món" Binding="{Binding FoodName}" Width="*"/>
+                    <DataGridTextColumn Header="SL" Binding="{Binding Count}" Width="50"/>
+                    <DataGridTextColumn Header="Đơn giá" Binding="{Binding Price, StringFormat=N0}" Width="90"/>
+                    <DataGridTextColumn Header="Thành tiền" Binding="{Binding Total, StringFormat=N0}" Width="110"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</Window>
