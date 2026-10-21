@@ -19,7 +19,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             DataTable table = DatabaseHelper.ExecuteQuery(
                 "SELECT Id, Name FROM Category WHERE Name LIKE @name ORDER BY Name;",
-                new SQLiteParameter("@name", "%" + keyword + "%"));
+                DatabaseHelper.Param("@name", "%" + keyword + "%"));
             return MapList(table);
         }
 
@@ -27,7 +27,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "INSERT INTO Category (Name) VALUES (@name);",
-                new SQLiteParameter("@name", name));
+                DatabaseHelper.Param("@name", name));
             return rows > 0;
         }
 
@@ -35,8 +35,8 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "UPDATE Category SET Name = @name WHERE Id = @id;",
-                new SQLiteParameter("@name", name),
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@name", name),
+                DatabaseHelper.Param("@id", id));
             return rows > 0;
         }
 
@@ -44,7 +44,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             object countObj = DatabaseHelper.ExecuteScalar(
                 "SELECT COUNT(*) FROM Food WHERE IdCategory = @id;",
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@id", id));
             if (Convert.ToInt32(countObj) > 0)
             {
                 return false;
@@ -52,7 +52,7 @@ namespace QuanLiQuanCoffe.DataAccess
 
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM Category WHERE Id = @id;",
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@id", id));
             return rows > 0;
         }
 
@@ -60,7 +60,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             object countObj = DatabaseHelper.ExecuteScalar(
                 "SELECT COUNT(*) FROM Food WHERE IdCategory = @id;",
-                new SQLiteParameter("@id", idCategory));
+                DatabaseHelper.Param("@id", idCategory));
             return Convert.ToInt32(countObj);
         }
 

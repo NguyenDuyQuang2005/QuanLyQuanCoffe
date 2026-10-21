@@ -13,8 +13,8 @@ namespace QuanLiQuanCoffe.DataAccess
             DataTable table = DatabaseHelper.ExecuteQuery(
                 "SELECT UserName, DisplayName, PassWord, Type FROM Account " +
                 "WHERE UserName = @userName AND PassWord = @passWord;",
-                new SQLiteParameter("@userName", userName),
-                new SQLiteParameter("@passWord", PasswordHelper.Hash(passWord)));
+                DatabaseHelper.Param("@userName", userName),
+                DatabaseHelper.Param("@passWord", PasswordHelper.Hash(passWord)));
 
             if (table.Rows.Count == 0)
             {
@@ -42,7 +42,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             object countObj = DatabaseHelper.ExecuteScalar(
                 "SELECT COUNT(*) FROM Account WHERE UserName = @userName;",
-                new SQLiteParameter("@userName", userName));
+                DatabaseHelper.Param("@userName", userName));
             return Convert.ToInt32(countObj) > 0;
         }
 
@@ -50,7 +50,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             object countObj = DatabaseHelper.ExecuteScalar(
                 "SELECT COUNT(*) FROM Account WHERE Type = @type;",
-                new SQLiteParameter("@type", Account.TypeAdmin));
+                DatabaseHelper.Param("@type", Account.TypeAdmin));
             return Convert.ToInt32(countObj);
         }
 
@@ -59,10 +59,10 @@ namespace QuanLiQuanCoffe.DataAccess
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "INSERT INTO Account (UserName, DisplayName, PassWord, Type) " +
                 "VALUES (@user, @display, @pass, @type);",
-                new SQLiteParameter("@user", account.UserName),
-                new SQLiteParameter("@display", account.DisplayName),
-                new SQLiteParameter("@pass", PasswordHelper.Hash(account.PassWord)),
-                new SQLiteParameter("@type", account.Type));
+                DatabaseHelper.Param("@user", account.UserName),
+                DatabaseHelper.Param("@display", account.DisplayName),
+                DatabaseHelper.Param("@pass", PasswordHelper.Hash(account.PassWord)),
+                DatabaseHelper.Param("@type", account.Type));
             return rows > 0;
         }
 
@@ -78,9 +78,9 @@ namespace QuanLiQuanCoffe.DataAccess
                 sql = "UPDATE Account SET DisplayName = @display, Type = @type WHERE UserName = @user;";
                 parameters = new SQLiteParameter[]
                 {
-                    new SQLiteParameter("@display", account.DisplayName),
-                    new SQLiteParameter("@type", account.Type),
-                    new SQLiteParameter("@user", account.UserName)
+                    DatabaseHelper.Param("@display", account.DisplayName),
+                    DatabaseHelper.Param("@type", account.Type),
+                    DatabaseHelper.Param("@user", account.UserName)
                 };
             }
             else
@@ -88,10 +88,10 @@ namespace QuanLiQuanCoffe.DataAccess
                 sql = "UPDATE Account SET DisplayName = @display, PassWord = @pass, Type = @type WHERE UserName = @user;";
                 parameters = new SQLiteParameter[]
                 {
-                    new SQLiteParameter("@display", account.DisplayName),
-                    new SQLiteParameter("@pass", PasswordHelper.Hash(account.PassWord)),
-                    new SQLiteParameter("@type", account.Type),
-                    new SQLiteParameter("@user", account.UserName)
+                    DatabaseHelper.Param("@display", account.DisplayName),
+                    DatabaseHelper.Param("@pass", PasswordHelper.Hash(account.PassWord)),
+                    DatabaseHelper.Param("@type", account.Type),
+                    DatabaseHelper.Param("@user", account.UserName)
                 };
             }
 
@@ -114,8 +114,8 @@ namespace QuanLiQuanCoffe.DataAccess
 
                 DatabaseHelper.ExecuteNonQuery(
                     "UPDATE Account SET PassWord = @pass WHERE UserName = @user;",
-                    new SQLiteParameter("@pass", PasswordHelper.Hash(list[i].PassWord)),
-                    new SQLiteParameter("@user", list[i].UserName));
+                    DatabaseHelper.Param("@pass", PasswordHelper.Hash(list[i].PassWord)),
+                    DatabaseHelper.Param("@user", list[i].UserName));
             }
         }
 
@@ -123,7 +123,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM Account WHERE UserName = @user;",
-                new SQLiteParameter("@user", userName));
+                DatabaseHelper.Param("@user", userName));
             return rows > 0;
         }
 

@@ -21,6 +21,7 @@ namespace QuanLiQuanCoffe.Views
             idHoaDonHienTai = 0;
             tamTinh = 0;
             txtBanDangChon.Text = "Chưa chọn bàn";
+            TableFoodDAO.SyncStatusWithUnpaidBills();
             NapBan();
             NapDanhMucVaMon();
             CapNhatTongTien();
@@ -153,19 +154,21 @@ namespace QuanLiQuanCoffe.Views
 
         private void CapNhatTongTien()
         {
+            // Kiểm tra các thành phần giao diện đã được khởi tạo chưa
+            if (txtGiamGia == null || txtTongTien == null)
+                return;
+
             int giamGia = 0;
             int.TryParse(txtGiamGia.Text.Trim(), out giamGia);
+
             if (giamGia < 0)
-            {
                 giamGia = 0;
-            }
 
             if (giamGia > 100)
-            {
                 giamGia = 100;
-            }
 
             double thanhTien = tamTinh * (100 - giamGia) / 100.0;
+
             txtTongTien.Text = "Tổng: " + thanhTien.ToString("N0") + " đ";
         }
 
@@ -198,17 +201,25 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            if (idHoaDonHienTai <= 0)
+            int idFood = Convert.ToInt32(cboMon.SelectedValue);
+            btnThemMon.IsEnabled = false;
+            try
             {
-                idHoaDonHienTai = BillDAO.Insert(idBanChon);
-                TableFoodDAO.UpdateStatus(idBanChon, TableFood.StatusCoKhach);
+                idHoaDonHienTai = BillDAO.AddFoodToTable(idBanChon, idFood, soLuong);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thêm được món.\n" + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            finally
+            {
+                btnThemMon.IsEnabled = true;
             }
 
-            int idFood = Convert.ToInt32(cboMon.SelectedValue);
-            BillDetailDAO.InsertOrIncrease(idHoaDonHienTai, idFood, soLuong);
             NapHoaDon();
             NapBan();
-            txtBanDangChon.Text = "Bàn đang chọn: đang có khách";
             CapNhatTenBan();
         }
 
@@ -226,6 +237,20 @@ namespace QuanLiQuanCoffe.Views
             }
         }
 
+        private void BtnGiamMon_Click(object sender, RoutedEventArgs e)
+        {
+            BillInfo dong = dgHoaDon.SelectedItem as BillInfo;
+            if (dong == null)
+            {
+                MessageBox.Show("Hãy chọn một món trên hóa đơn để giảm số lượng.", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            BillDetailDAO.Decrease(dong.Id, 1);
+            XuLyHoaDonSauKhiXoaMon();
+        }
+
         private void BtnXoaMon_Click(object sender, RoutedEventArgs e)
         {
             BillInfo dong = dgHoaDon.SelectedItem as BillInfo;
@@ -237,7 +262,25 @@ namespace QuanLiQuanCoffe.Views
             }
 
             BillDetailDAO.Delete(dong.Id);
+            XuLyHoaDonSauKhiXoaMon();
+        }
+
+        private void XuLyHoaDonSauKhiXoaMon()
+        {
+            if (idHoaDonHienTai > 0 && idBanChon > 0)
+            {
+                BillDAO.CancelIfEmpty(idHoaDonHienTai, idBanChon);
+                Bill unpaid = BillDAO.GetUnpaidByTable(idBanChon);
+                if (unpaid == null)
+                {
+                    idHoaDonHienTai = 0;
+                    txtGiamGia.Text = "0";
+                }
+            }
+
             NapHoaDon();
+            NapBan();
+            CapNhatTenBan();
         }
 
         private void BtnThanhToan_Click(object sender, RoutedEventArgs e)
@@ -276,8 +319,30 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            BillDAO.CheckOut(idHoaDonHienTai, giamGia);
-            TableFoodDAO.UpdateStatus(idBanChon, TableFood.StatusTrong);
+            btnThanhToan.IsEnabled = false;
+            bool thanhCong;
+            try
+            {
+                thanhCong = BillDAO.CheckOutAndFreeTable(idHoaDonHienTai, idBanChon, giamGia);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Thanh toán thất bại.\n" + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            finally
+            {
+                btnThanhToan.IsEnabled = true;
+            }
+
+            if (!thanhCong)
+            {
+                MessageBox.Show("Hóa đơn đã được thanh toán hoặc không còn hiệu lực.", "Thông báo",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             idHoaDonHienTai = 0;
             txtGiamGia.Text = "0";
             NapHoaDon();

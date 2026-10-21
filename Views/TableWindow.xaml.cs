@@ -56,9 +56,9 @@ namespace QuanLiQuanCoffe.Views
                 NapBan();
                 XoaForm();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Không thêm được bàn (có thể trùng tên).", "Lỗi",
+                MessageBox.Show("Không thêm được bàn (có thể trùng tên).\n" + ex.Message, "Lỗi",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -85,9 +85,9 @@ namespace QuanLiQuanCoffe.Views
                 TableFoodDAO.Update(idBanChon, ten);
                 NapBan();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Không sửa được bàn (có thể trùng tên).", "Lỗi",
+                MessageBox.Show("Không sửa được bàn (có thể trùng tên).\n" + ex.Message, "Lỗi",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

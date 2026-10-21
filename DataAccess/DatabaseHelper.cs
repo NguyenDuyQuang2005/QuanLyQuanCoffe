@@ -50,7 +50,49 @@ namespace QuanLiQuanCoffe.DataAccess
                 pragmaCommand.ExecuteNonQuery();
             }
 
+            using (SQLiteCommand timeoutCommand = new SQLiteCommand("PRAGMA busy_timeout = 5000;", connection))
+            {
+                timeoutCommand.ExecuteNonQuery();
+            }
+
             return connection;
+        }
+
+        /// <summary>
+        /// Tạo parameter an toàn.
+        /// Không dùng new SQLiteParameter(name, 0): C# chọn constructor (string, DbType)
+        /// vì số 0 chuyển được sang enum, Value = null → NOT NULL constraint failed: Bill.Status.
+        /// </summary>
+        public static SQLiteParameter Param(string name, object value)
+        {
+            SQLiteParameter parameter = new SQLiteParameter();
+            parameter.ParameterName = name;
+            if (value == null)
+            {
+                parameter.Value = DBNull.Value;
+                return parameter;
+            }
+
+            Type type = value.GetType();
+            if (type == typeof(int))
+            {
+                parameter.DbType = DbType.Int32;
+            }
+            else if (type == typeof(long))
+            {
+                parameter.DbType = DbType.Int64;
+            }
+            else if (type == typeof(double) || type == typeof(float) || type == typeof(decimal))
+            {
+                parameter.DbType = DbType.Double;
+            }
+            else if (type == typeof(string))
+            {
+                parameter.DbType = DbType.String;
+            }
+
+            parameter.Value = value;
+            return parameter;
         }
 
         /// <summary>
@@ -67,92 +109,112 @@ namespace QuanLiQuanCoffe.DataAccess
             AccountDAO.HashPlaintextPasswordsIfNeeded();
         }
 
-        /// <summary>
-        /// Chạy lệnh INSERT/UPDATE/DELETE. Luôn truyền Parameters, không cộng chuỗi SQL.
-        /// </summary>
+        public static T RunInTransaction<T>(Func<SQLiteConnection, T> work)
+        {
+            using (SQLiteConnection connection = GetConnection())
+            {
+                using (SQLiteTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        T result = work(connection);
+                        transaction.Commit();
+                        return result;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
         public static int ExecuteNonQuery(string sql, params SQLiteParameter[] parameters)
         {
             using (SQLiteConnection connection = GetConnection())
             {
-                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
-
-                    return command.ExecuteNonQuery();
-                }
+                return ExecuteNonQuery(connection, sql, parameters);
             }
         }
 
-        /// <summary>
-        /// INSERT rồi lấy Id vừa tạo (last_insert_rowid) trên cùng một kết nối.
-        /// </summary>
+        public static int ExecuteNonQuery(SQLiteConnection connection, string sql, params SQLiteParameter[] parameters)
+        {
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                PrepareCommand(command, parameters);
+                return command.ExecuteNonQuery();
+            }
+        }
+
         public static int ExecuteInsert(string sql, params SQLiteParameter[] parameters)
         {
             using (SQLiteConnection connection = GetConnection())
             {
-                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
-
-                    command.ExecuteNonQuery();
-                }
-
-                using (SQLiteCommand idCommand = new SQLiteCommand("SELECT last_insert_rowid();", connection))
-                {
-                    return Convert.ToInt32(idCommand.ExecuteScalar());
-                }
+                return ExecuteInsert(connection, sql, parameters);
             }
         }
 
-        /// <summary>
-        /// Chạy lệnh trả về một giá trị (COUNT, MAX, last_insert_rowid...).
-        /// </summary>
+        public static int ExecuteInsert(SQLiteConnection connection, string sql, params SQLiteParameter[] parameters)
+        {
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                PrepareCommand(command, parameters);
+                command.ExecuteNonQuery();
+            }
+
+            using (SQLiteCommand idCommand = new SQLiteCommand("SELECT last_insert_rowid();", connection))
+            {
+                return Convert.ToInt32(idCommand.ExecuteScalar());
+            }
+        }
+
         public static object ExecuteScalar(string sql, params SQLiteParameter[] parameters)
         {
             using (SQLiteConnection connection = GetConnection())
             {
-                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
-
-                    return command.ExecuteScalar();
-                }
+                return ExecuteScalar(connection, sql, parameters);
             }
         }
 
-        /// <summary>
-        /// Chạy SELECT, đổ vào DataTable (dùng SQLiteDataAdapter).
-        /// </summary>
+        public static object ExecuteScalar(SQLiteConnection connection, string sql, params SQLiteParameter[] parameters)
+        {
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                PrepareCommand(command, parameters);
+                return command.ExecuteScalar();
+            }
+        }
+
         public static DataTable ExecuteQuery(string sql, params SQLiteParameter[] parameters)
         {
-            DataTable table = new DataTable();
-
             using (SQLiteConnection connection = GetConnection())
             {
-                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
-                {
-                    if (parameters != null && parameters.Length > 0)
-                    {
-                        command.Parameters.AddRange(parameters);
-                    }
+                return ExecuteQuery(connection, sql, parameters);
+            }
+        }
 
-                    using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(command))
-                    {
-                        adapter.Fill(table);
-                    }
+        public static DataTable ExecuteQuery(SQLiteConnection connection, string sql, params SQLiteParameter[] parameters)
+        {
+            DataTable table = new DataTable();
+            using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+            {
+                PrepareCommand(command, parameters);
+                using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(command))
+                {
+                    adapter.Fill(table);
                 }
             }
 
             return table;
+        }
+
+        private static void PrepareCommand(SQLiteCommand command, SQLiteParameter[] parameters)
+        {
+            if (parameters != null && parameters.Length > 0)
+            {
+                command.Parameters.AddRange(parameters);
+            }
         }
 
         private static void CreateTables(SQLiteConnection connection)

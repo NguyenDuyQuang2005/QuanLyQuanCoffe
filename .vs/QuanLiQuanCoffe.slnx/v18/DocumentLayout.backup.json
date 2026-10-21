@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "E:\\2026\\QuanLiQuanCoffe\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|E:\\2026\\QuanLiQuanCoffe\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|E:\\2026\\QuanLiQuanCoffe\\views\\orderwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:views\\orderwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|e:\\2026\\quanliquancoffe\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|E:\\2026\\QuanLiQuanCoffe\\views\\orderwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:views\\orderwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|E:\\2026\\QuanLiQuanCoffe\\dataaccess\\billdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:dataaccess\\billdao.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|e:\\2026\\quanliquancoffe\\dataaccess\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:dataaccess\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|E:\\2026\\QuanLiQuanCoffe\\views\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{3B3D545B-73D7-4CC7-B68F-C8E5AFB5A70E}|QuanLiQuanCoffe.csproj|solutionrelative:views\\mainwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,31 +30,70 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-10-14T03:29:55.322Z",
+              "DocumentIndex": 4,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\Views\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\MainWindow.xaml.cs",
+              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\Views\\MainWindow.xaml.cs",
+              "RelativeToolTip": "Views\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-14T04:13:45.794Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BillDAO.cs",
+              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\DataAccess\\BillDAO.cs",
+              "RelativeDocumentMoniker": "DataAccess\\BillDAO.cs",
+              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\DataAccess\\BillDAO.cs",
+              "RelativeToolTip": "DataAccess\\BillDAO.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAvwC4AAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-14T04:48:07.895Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseHelper.cs",
+              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\DataAccess\\DatabaseHelper.cs",
+              "RelativeDocumentMoniker": "DataAccess\\DatabaseHelper.cs",
+              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\DataAccess\\DatabaseHelper.cs",
+              "RelativeToolTip": "DataAccess\\DatabaseHelper.cs",
+              "ViewState": "AgIAAEoBAAAAAAAAAADwv2QBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-14T04:41:19.23Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\MainWindow.xaml.cs",
-              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
-              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\MainWindow.xaml.cs",
-              "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Title": "OrderWindow.xaml.cs",
+              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\Views\\OrderWindow.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\OrderWindow.xaml.cs",
+              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\Views\\OrderWindow.xaml.cs",
+              "RelativeToolTip": "Views\\OrderWindow.xaml.cs",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAgwKwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-10-14T03:29:53.02Z",
+              "WhenOpened": "2026-10-14T04:37:59.238Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderWindow.xaml",
+              "DocumentMoniker": "E:\\2026\\QuanLiQuanCoffe\\Views\\OrderWindow.xaml",
+              "RelativeDocumentMoniker": "Views\\OrderWindow.xaml",
+              "ToolTip": "E:\\2026\\QuanLiQuanCoffe\\Views\\OrderWindow.xaml",
+              "RelativeToolTip": "Views\\OrderWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-10-14T04:33:31.708Z",
               "EditorCaption": ""
             }
           ]

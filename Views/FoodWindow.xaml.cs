@@ -228,7 +228,17 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            FoodDAO.Insert(ten, idCategory, gia);
+            try
+            {
+                FoodDAO.Insert(ten, idCategory, gia);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không thêm được món.\n" + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             NapMon();
             XoaFormMon();
         }
@@ -250,7 +260,17 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            FoodDAO.Update(idMonChon, ten, idCategory, gia);
+            try
+            {
+                FoodDAO.Update(idMonChon, ten, idCategory, gia);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không sửa được món.\n" + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             NapMon();
         }
 

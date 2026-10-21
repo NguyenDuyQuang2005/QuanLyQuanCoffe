@@ -14,7 +14,7 @@ namespace QuanLiQuanCoffe.DataAccess
                 "SELECT d.Id, d.IdFood, f.Name AS FoodName, d.Count, f.Price " +
                 "FROM BillDetail d INNER JOIN Food f ON d.IdFood = f.Id " +
                 "WHERE d.IdBill = @bill ORDER BY d.Id;",
-                new SQLiteParameter("@bill", idBill));
+                DatabaseHelper.Param("@bill", idBill));
 
             List<BillInfo> list = new List<BillInfo>();
             int i;
@@ -38,35 +38,77 @@ namespace QuanLiQuanCoffe.DataAccess
         /// </summary>
         public static void InsertOrIncrease(int idBill, int idFood, int count)
         {
+            using (SQLiteConnection connection = DatabaseHelper.GetConnection())
+            {
+                InsertOrIncrease(connection, idBill, idFood, count);
+            }
+        }
+
+        public static void InsertOrIncrease(SQLiteConnection connection, int idBill, int idFood, int count)
+        {
             DataTable table = DatabaseHelper.ExecuteQuery(
+                connection,
                 "SELECT Id, Count FROM BillDetail WHERE IdBill = @bill AND IdFood = @food;",
-                new SQLiteParameter("@bill", idBill),
-                new SQLiteParameter("@food", idFood));
+                DatabaseHelper.Param("@bill", idBill),
+                DatabaseHelper.Param("@food", idFood));
 
             if (table.Rows.Count > 0)
             {
                 int id = Convert.ToInt32(table.Rows[0]["Id"]);
                 int oldCount = Convert.ToInt32(table.Rows[0]["Count"]);
                 DatabaseHelper.ExecuteNonQuery(
+                    connection,
                     "UPDATE BillDetail SET Count = @count WHERE Id = @id;",
-                    new SQLiteParameter("@count", oldCount + count),
-                    new SQLiteParameter("@id", id));
+                    DatabaseHelper.Param("@count", oldCount + count),
+                    DatabaseHelper.Param("@id", id));
             }
             else
             {
                 DatabaseHelper.ExecuteNonQuery(
+                    connection,
                     "INSERT INTO BillDetail (IdBill, IdFood, Count) VALUES (@bill, @food, @count);",
-                    new SQLiteParameter("@bill", idBill),
-                    new SQLiteParameter("@food", idFood),
-                    new SQLiteParameter("@count", count));
+                    DatabaseHelper.Param("@bill", idBill),
+                    DatabaseHelper.Param("@food", idFood),
+                    DatabaseHelper.Param("@count", count));
             }
+        }
+
+        /// <summary>
+        /// Giảm số lượng; nếu còn &lt;= 0 thì xóa dòng.
+        /// </summary>
+        public static bool Decrease(int id, int amount)
+        {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
+            DataTable table = DatabaseHelper.ExecuteQuery(
+                "SELECT Count FROM BillDetail WHERE Id = @id;",
+                DatabaseHelper.Param("@id", id));
+            if (table.Rows.Count == 0)
+            {
+                return false;
+            }
+
+            int count = Convert.ToInt32(table.Rows[0]["Count"]) - amount;
+            if (count <= 0)
+            {
+                return Delete(id);
+            }
+
+            int rows = DatabaseHelper.ExecuteNonQuery(
+                "UPDATE BillDetail SET Count = @count WHERE Id = @id;",
+                DatabaseHelper.Param("@count", count),
+                DatabaseHelper.Param("@id", id));
+            return rows > 0;
         }
 
         public static bool Delete(int id)
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM BillDetail WHERE Id = @id;",
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@id", id));
             return rows > 0;
         }
     }

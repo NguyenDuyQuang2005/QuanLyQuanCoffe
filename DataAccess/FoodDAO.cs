@@ -40,14 +40,14 @@ namespace QuanLiQuanCoffe.DataAccess
             {
                 table = DatabaseHelper.ExecuteQuery(
                     sql,
-                    new SQLiteParameter("@name", "%" + keyword + "%"),
-                    new SQLiteParameter("@cat", idCategory));
+                    DatabaseHelper.Param("@name", "%" + keyword + "%"),
+                    DatabaseHelper.Param("@cat", idCategory));
             }
             else
             {
                 table = DatabaseHelper.ExecuteQuery(
                     sql,
-                    new SQLiteParameter("@name", "%" + keyword + "%"));
+                    DatabaseHelper.Param("@name", "%" + keyword + "%"));
             }
 
             List<Food> list = new List<Food>();
@@ -64,9 +64,9 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "INSERT INTO Food (Name, IdCategory, Price) VALUES (@name, @cat, @price);",
-                new SQLiteParameter("@name", name),
-                new SQLiteParameter("@cat", idCategory),
-                new SQLiteParameter("@price", price));
+                DatabaseHelper.Param("@name", name),
+                DatabaseHelper.Param("@cat", idCategory),
+                DatabaseHelper.Param("@price", price));
             return rows > 0;
         }
 
@@ -74,10 +74,10 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "UPDATE Food SET Name = @name, IdCategory = @cat, Price = @price WHERE Id = @id;",
-                new SQLiteParameter("@name", name),
-                new SQLiteParameter("@cat", idCategory),
-                new SQLiteParameter("@price", price),
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@name", name),
+                DatabaseHelper.Param("@cat", idCategory),
+                DatabaseHelper.Param("@price", price),
+                DatabaseHelper.Param("@id", id));
             return rows > 0;
         }
 
@@ -85,7 +85,7 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             object countObj = DatabaseHelper.ExecuteScalar(
                 "SELECT COUNT(*) FROM BillDetail WHERE IdFood = @id;",
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@id", id));
             if (Convert.ToInt32(countObj) > 0)
             {
                 return false;
@@ -93,7 +93,7 @@ namespace QuanLiQuanCoffe.DataAccess
 
             int rows = DatabaseHelper.ExecuteNonQuery(
                 "DELETE FROM Food WHERE Id = @id;",
-                new SQLiteParameter("@id", id));
+                DatabaseHelper.Param("@id", id));
             return rows > 0;
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using QuanLiQuanCoffe.DataAccess;
 using QuanLiQuanCoffe.Models;
@@ -33,7 +34,18 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            Account account = AccountDAO.Login(userName, passWord);
+            Account account;
+            try
+            {
+                account = AccountDAO.Login(userName, passWord);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không đăng nhập được.\n" + ex.Message, "Lỗi",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (account == null)
             {
                 MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu.", "Đăng nhập thất bại",
