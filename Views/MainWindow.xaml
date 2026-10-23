@@ -34,23 +34,34 @@
         </StatusBar>
 
         <Grid Margin="24">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <!-- Phần trang chủ hiện tại -->
+            <StackPanel x:Name="pnlTrangChu"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+
                 <TextBlock x:Name="txtChao"
-                           FontSize="22"
-                           FontWeight="SemiBold"
-                           Foreground="#FF4A3728"
-                           HorizontalAlignment="Center"/>
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Foreground="#FF4A3728"
+                   HorizontalAlignment="Center"/>
+
                 <TextBlock x:Name="txtQuyen"
-                           FontSize="14"
-                           Foreground="#FF6B5344"
-                           HorizontalAlignment="Center"
-                           Margin="0,8,0,0"/>
+                   FontSize="14"
+                   Foreground="#FF6B5344"
+                   HorizontalAlignment="Center"
+                   Margin="0,8,0,0"/>
+
                 <TextBlock Text="Chọn chức năng trên thanh nút để làm việc."
-                           FontSize="13"
-                           Foreground="#FF8A7464"
-                           HorizontalAlignment="Center"
-                           Margin="0,16,0,0"/>
+                   FontSize="13"
+                   Foreground="#FF8A7464"
+                   HorizontalAlignment="Center"
+                   Margin="0,16,0,0"/>
+
             </StackPanel>
+
+            <!-- Vùng dành cho giao diện chức năng -->
+            <ContentControl x:Name="noiDungChinh"
+                    Visibility="Collapsed"/>
         </Grid>
     </DockPanel>
 </Window>
