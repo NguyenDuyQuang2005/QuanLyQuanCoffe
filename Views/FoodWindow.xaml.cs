@@ -7,7 +7,7 @@ using QuanLiQuanCoffe.Models;
 
 namespace QuanLiQuanCoffe.Views
 {
-    public partial class FoodWindow : Window
+    public partial class FoodWindow : UserControl
     {
         private int idDanhMucChon;
         private int idMonChon;

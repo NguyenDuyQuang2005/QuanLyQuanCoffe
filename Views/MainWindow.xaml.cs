@@ -1,5 +1,6 @@
 using System.Windows;
 using QuanLiQuanCoffe.Models;
+using System.Windows.Controls;
 
 namespace QuanLiQuanCoffe.Views
 {
@@ -27,18 +28,25 @@ namespace QuanLiQuanCoffe.Views
             }
         }
 
+        private void HienThiNoiDung(UserControl giaoDien)
+        {
+            // Ẩn giao diện trang chủ
+            pnlTrangChu.Visibility = Visibility.Collapsed;
+
+            // Hiển thị vùng nội dung
+            noiDungChinh.Visibility = Visibility.Visible;
+
+            // Đưa giao diện mới vào ContentControl
+            noiDungChinh.Content = giaoDien;
+        }
         private void BtnGoiMon_Click(object sender, RoutedEventArgs e)
         {
-            OrderWindow window = new OrderWindow();
-            window.Owner = this;
-            window.ShowDialog();
+           HienThiNoiDung(new OrderWindow());
         }
 
         private void BtnMon_Click(object sender, RoutedEventArgs e)
         {
-            FoodWindow window = new FoodWindow();
-            window.Owner = this;
-            window.ShowDialog();
+            HienThiNoiDung(new FoodWindow());
         }
 
         private void BtnBan_Click(object sender, RoutedEventArgs e)
