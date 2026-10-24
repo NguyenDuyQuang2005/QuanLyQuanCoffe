@@ -6,7 +6,7 @@ using QuanLiQuanCoffe.Models;
 
 namespace QuanLiQuanCoffe.Views
 {
-    public partial class TableWindow : Window
+    public partial class TableWindow : UserControl
     {
         private int idBanChon;
 

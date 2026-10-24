@@ -51,9 +51,7 @@ namespace QuanLiQuanCoffe.Views
 
         private void BtnBan_Click(object sender, RoutedEventArgs e)
         {
-            TableWindow window = new TableWindow();
-            window.Owner = this;
-            window.ShowDialog();
+            HienThiNoiDung(new TableWindow());
         }
 
         private void BtnNhanVien_Click(object sender, RoutedEventArgs e)
