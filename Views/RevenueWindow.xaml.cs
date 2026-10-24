@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Windows;
 using QuanLiQuanCoffe.DataAccess;
 using QuanLiQuanCoffe.Models;
+using System.Windows.Controls;
 
 namespace QuanLiQuanCoffe.Views
 {
-    public partial class RevenueWindow : Window
+    public partial class RevenueWindow : UserControl
     {
         public RevenueWindow()
         {

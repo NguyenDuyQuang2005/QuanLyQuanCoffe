@@ -75,9 +75,7 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            RevenueWindow window = new RevenueWindow();
-            window.Owner = this;
-            window.ShowDialog();
+            HienThiNoiDung(new RevenueWindow());
         }
 
         private void MenuDangXuat_Click(object sender, RoutedEventArgs e)
