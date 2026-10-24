@@ -63,9 +63,7 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            StaffWindow window = new StaffWindow(taiKhoanHienTai);
-            window.Owner = this;
-            window.ShowDialog();
+            HienThiNoiDung(new StaffWindow(taiKhoanHienTai));
         }
 
         private void BtnThongKe_Click(object sender, RoutedEventArgs e)

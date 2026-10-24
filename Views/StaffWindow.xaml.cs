@@ -6,7 +6,7 @@ using QuanLiQuanCoffe.Models;
 
 namespace QuanLiQuanCoffe.Views
 {
-    public partial class StaffWindow : Window
+    public partial class StaffWindow : UserControl
     {
         private readonly string tenDangNhapHienTai;
         private bool dangSua;

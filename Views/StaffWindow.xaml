@@ -1,9 +1,6 @@
-<Window x:Class="QuanLiQuanCoffe.Views.StaffWindow"
+<UserControl x:Class="QuanLiQuanCoffe.Views.StaffWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Quản lý nhân viên"
-        Height="500" Width="720"
-        WindowStartupLocation="CenterOwner"
         Background="#FFF7F2EC">
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -49,4 +46,4 @@
             </StackPanel>
         </Grid>
     </Grid>
-</Window>
+</UserControl>
