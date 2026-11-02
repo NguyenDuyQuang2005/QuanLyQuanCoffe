@@ -1,0 +1,182 @@
+<UserControl x:Class="QuanLiQuanCoffe.Views.StaffWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="White">
+
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tieu de -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="QUẢN LÝ NHÂN VIÊN"
+                       FontSize="21"
+                       FontWeight="SemiBold"
+                       Foreground="{StaticResource PrimaryBrush}"/>
+            <TextBlock Text="Quản lý tài khoản, tên hiển thị và quyền truy cập."
+                       FontSize="12"
+                       Foreground="#FF806F61"
+                       Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- Danh sach tai khoan ben trai va form ben phai -->
+        <Grid Grid.Row="1" Margin="0,0,0,2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="340"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="280"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Cot trai: danh sach su dung chieu cao con lai -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Background="#FFF7F2EC"
+                        BorderBrush="#FFE4D7CB"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12">
+                    <StackPanel>
+                        <TextBlock Text="Danh sách tài khoản"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="#FF4A3728"/>
+                        <TextBlock Text="Chọn một dòng để chỉnh sửa hoặc xóa tài khoản."
+                                   FontSize="11"
+                                   Foreground="#FF806F61"
+                                   Margin="0,4,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <DataGrid x:Name="dgNhanVien"
+                          Grid.Row="1"
+                          Margin="0,8,0,0"
+                          Style="{StaticResource TableDataGridStyle}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          SelectionMode="Single"
+                          SelectionChanged="DgNhanVien_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tên đăng nhập"
+                                            Binding="{Binding UserName}"
+                                            Width="135"/>
+                        <DataGridTextColumn Header="Tên hiển thị"
+                                            Binding="{Binding DisplayName}"
+                                            Width="*"/>
+                        <DataGridTextColumn Header="Quyền"
+                                            Binding="{Binding TypeName}"
+                                            Width="95"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- Cot phai: thong tin va thao tac CRUD -->
+            <Border Grid.Column="2"
+                    Background="#FFF7F2EC"
+                    BorderBrush="#FFE4D7CB"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="Thông tin nhân viên"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="#FF4A3728"
+                                   Margin="0,0,0,14"/>
+
+                        <TextBlock Text="Tên đăng nhập"
+                                   FontSize="12"
+                                   Foreground="#FF6B5344"/>
+                        <TextBox x:Name="txtTenDangNhap"
+                                 Style="{StaticResource FormTextBoxStyle}"
+                                 Margin="0,4,0,12"/>
+
+                        <TextBlock Text="Tên hiển thị"
+                                   FontSize="12"
+                                   Foreground="#FF6B5344"/>
+                        <TextBox x:Name="txtTenHienThi"
+                                 Style="{StaticResource FormTextBoxStyle}"
+                                 Margin="0,4,0,12"/>
+
+                        <TextBlock Text="Mật khẩu"
+                                   FontSize="12"
+                                   Foreground="#FF6B5344"/>
+                        <PasswordBox x:Name="txtMatKhau"
+                                     Height="32"
+                                     Padding="8,0"
+                                     VerticalContentAlignment="Center"
+                                     Background="White"
+                                     BorderBrush="{StaticResource InputBorderBrush}"
+                                     BorderThickness="1"
+                                     Margin="0,4,0,4"/>
+                        <TextBlock Text="Khi sửa: để trống nếu muốn giữ mật khẩu cũ."
+                                   Foreground="#FF806F61"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,12"/>
+
+                        <TextBlock Text="Quyền"
+                                   FontSize="12"
+                                   Foreground="#FF6B5344"/>
+                        <ComboBox x:Name="cboQuyen"
+                                  Style="{StaticResource FormComboBoxStyle}"
+                                  Margin="0,4,0,16">
+                            <ComboBoxItem Content="Nhân viên" Tag="0"/>
+                            <ComboBoxItem Content="Admin" Tag="1"/>
+                        </ComboBox>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Button Grid.Row="0" Grid.Column="0"
+                                    Content="Thêm"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Margin="0,0,4,8"
+                                    Click="BtnThem_Click"/>
+                            <Button Grid.Row="0" Grid.Column="1"
+                                    Content="Sửa"
+                                    Height="36"
+                                    Margin="4,0,0,8"
+                                    Click="BtnSua_Click"/>
+                            <Button Grid.Row="1" Grid.Column="0"
+                                    Content="Xóa"
+                                    Height="36"
+                                    Margin="0,0,4,0"
+                                    Background="#FFF3DFDA"
+                                    Foreground="#FF8F3B32"
+                                    Click="BtnXoa_Click"/>
+                            <Button Grid.Row="1" Grid.Column="1"
+                                    Content="Làm mới"
+                                    Height="36"
+                                    Margin="4,0,0,0"
+                                    Click="BtnLamMoi_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="Chỉ Admin được quản lý nhân viên. Không thể xóa tài khoản đang đăng nhập."
+                                   Foreground="#FF806F61"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Margin="0,16,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

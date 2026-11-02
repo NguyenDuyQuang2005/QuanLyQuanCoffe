@@ -1,0 +1,32 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET Build
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# NuGet
+[Pp]ackages/
+*.nupkg
+
+# Test
+TestResults/
+coverage/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+
+# SQLite temporary files
+*.db-wal
+*.db-shm
+*.db-journal

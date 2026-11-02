@@ -1,0 +1,54 @@
+<Window x:Class="QuanLiQuanCoffe.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Đăng nhập - Quản lý quán cà phê"
+        Height="420" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#FFF7F2EC">
+    <Grid Margin="32">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Quản lý quán cà phê"
+                       FontSize="24"
+                       FontWeight="SemiBold"
+                       Foreground="#FF4A3728"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="Đăng nhập để tiếp tục"
+                       FontSize="13"
+                       Foreground="#FF6B5344"
+                       HorizontalAlignment="Center"
+                       Margin="0,6,0,24"/>
+
+            <TextBlock Text="Tên đăng nhập" Foreground="#FF4A3728" Margin="0,0,0,6"/>
+            <TextBox x:Name="txtTenDangNhap"
+                     Height="32"
+                     Padding="8,6"
+                     FontSize="14"/>
+
+            <TextBlock Text="Mật khẩu" Foreground="#FF4A3728" Margin="0,14,0,6"/>
+            <PasswordBox x:Name="txtMatKhau"
+                         Height="32"
+                         Padding="8,6"
+                         FontSize="14"/>
+
+            <Button x:Name="btnDangNhap"
+                    Content="Đăng nhập"
+                    Height="36"
+                    Margin="0,22,0,0"
+                    Background="#FF6F4E37"
+                    Foreground="White"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    IsDefault="True"
+                    Click="BtnDangNhap_Click"/>
+
+            <TextBlock 
+                       FontSize="11"
+                       Foreground="#FF8A7464"
+                       HorizontalAlignment="Center"
+                       Margin="0,16,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
