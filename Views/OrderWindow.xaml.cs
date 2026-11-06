@@ -196,7 +196,21 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            List<BillInfo> chiTiet = BillDetailDAO.GetByBill(idHoaDonHienTai);
+            List<BillInfo> chiTiet;
+            try
+            {
+                chiTiet = BillDetailDAO.GetByBill(idHoaDonHienTai);
+            }
+            catch (InvalidOperationException ex)
+            {
+                dgHoaDon.ItemsSource = null;
+                tamTinh = 0;
+                CapNhatTongTien();
+                MessageBox.Show(ex.Message, "Thiếu đơn giá hóa đơn", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
             dgHoaDon.ItemsSource = chiTiet;
             tamTinh = 0;
             int i;
@@ -348,7 +362,18 @@ namespace QuanLiQuanCoffe.Views
                 return;
             }
 
-            List<BillInfo> chiTiet = BillDetailDAO.GetByBill(idHoaDonHienTai);
+            List<BillInfo> chiTiet;
+            try
+            {
+                chiTiet = BillDetailDAO.GetByBill(idHoaDonHienTai);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, "Không thể thanh toán", MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
             if (chiTiet.Count == 0)
             {
                 MessageBox.Show("Hóa đơn chưa có món.", "Thông báo",

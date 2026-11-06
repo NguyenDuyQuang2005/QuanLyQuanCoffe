@@ -9,5 +9,8 @@ namespace QuanLiQuanCoffe.Models
         public int IdBill { get; set; }
         public int IdFood { get; set; }
         public int Count { get; set; }
+
+        // NULL neu la hoa don cu chua biet don gia tai thoi diem ban.
+        public double? UnitPriceAtSale { get; set; }
     }
 }

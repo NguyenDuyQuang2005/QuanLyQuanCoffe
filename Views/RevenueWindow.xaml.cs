@@ -41,7 +41,19 @@ namespace QuanLiQuanCoffe.Views
             DateTime ngay = dpNgay.SelectedDate.Value;
             bool theoThang = cboKieu.SelectedIndex == 1;
 
-            List<RevenueItem> list = BillDAO.GetRevenue(ngay, theoThang);
+            List<RevenueItem> list;
+            try
+            {
+                list = BillDAO.GetRevenue(ngay, theoThang);
+            }
+            catch (InvalidOperationException ex)
+            {
+                dgDoanhThu.ItemsSource = null;
+                txtTong.Text = "Chưa thể tính doanh thu: thiếu đơn giá lịch sử.";
+                MessageBox.Show(ex.Message, "Doanh thu chưa đầy đủ",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             dgDoanhThu.ItemsSource = list;
 

@@ -100,11 +100,16 @@ namespace QuanLiQuanCoffe.DataAccess
         /// </summary>
         public static void InitializeDatabase()
         {
-            using (SQLiteConnection connection = GetConnection())
+            // SQLite transaction bao gồm cả tạo bảng / nâng cấp schema / seed.
+            // Nếu lỗi giữa chừng, tránh để database trong trạng thái seed một nửa.
+            RunInTransaction(delegate(SQLiteConnection connection)
             {
                 CreateTables(connection);
+                EnsureBillDetailUnitPriceColumn(connection);
                 InsertSampleDataIfEmpty(connection);
-            }
+                EnsureUniqueOpenBillIndex(connection);
+                return true;
+            });
 
             AccountDAO.HashPlaintextPasswordsIfNeeded();
         }
@@ -257,6 +262,7 @@ namespace QuanLiQuanCoffe.DataAccess
                     IdBill INTEGER NOT NULL,
                     IdFood INTEGER NOT NULL,
                     Count  INTEGER NOT NULL DEFAULT 1 CHECK (Count > 0),
+                    UnitPriceAtSale REAL CHECK (UnitPriceAtSale IS NULL OR UnitPriceAtSale >= 0),
                     FOREIGN KEY (IdBill) REFERENCES Bill(Id) ON DELETE CASCADE,
                     FOREIGN KEY (IdFood) REFERENCES Food(Id)
                 );"
@@ -272,17 +278,74 @@ namespace QuanLiQuanCoffe.DataAccess
             }
         }
 
-        private static void InsertSampleDataIfEmpty(SQLiteConnection connection)
+        /// <summary>
+        /// Nang cap CSDL cu: them don gia ban vao BillDetail neu cot chua ton tai.
+        /// Khong tu gan gia hien tai cho hoa don cu vi khong the phuc hoi gia lich su.
+        /// Ham co the goi nhieu lan ma khong them trung cot.
+        /// </summary>
+        private static void EnsureBillDetailUnitPriceColumn(SQLiteConnection connection)
         {
-            int accountCount;
-            using (SQLiteCommand countCommand = new SQLiteCommand("SELECT COUNT(*) FROM Account;", connection))
+            bool columnExists = false;
+
+            using (SQLiteCommand command = new SQLiteCommand("PRAGMA table_info('BillDetail');", connection))
+            using (SQLiteDataReader reader = command.ExecuteReader())
             {
-                accountCount = Convert.ToInt32(countCommand.ExecuteScalar());
+                while (reader.Read())
+                {
+                    string columnName = reader.GetString(1);
+                    if (string.Equals(columnName, "UnitPriceAtSale", StringComparison.OrdinalIgnoreCase))
+                    {
+                        columnExists = true;
+                        break;
+                    }
+                }
             }
 
-            if (accountCount > 0)
+            if (!columnExists)
             {
-                return;
+                const string sql =
+                    "ALTER TABLE BillDetail ADD COLUMN UnitPriceAtSale REAL " +
+                    "CHECK (UnitPriceAtSale IS NULL OR UnitPriceAtSale >= 0);";
+
+                using (SQLiteCommand command = new SQLiteCommand(sql, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// SQLite partial unique index chặn mở hai hóa đơn chưa thanh toán cho cùng bàn.
+        /// Nếu DB đã có dữ liệu trùng, báo lỗi rõ ràng, KHÔNG tự xóa hóa đơn.
+        /// </summary>
+        private static void EnsureUniqueOpenBillIndex(SQLiteConnection connection)
+        {
+            object conflictingTable = ExecuteScalar(connection,
+                "SELECT IdTable FROM Bill WHERE Status = 0 GROUP BY IdTable " +
+                "HAVING COUNT(*) > 1 LIMIT 1;");
+            if (conflictingTable != null && conflictingTable != DBNull.Value)
+            {
+                throw new InvalidOperationException(
+                    "Bàn số " + conflictingTable + " có nhiều hóa đơn chưa thanh toán. " +
+                    "Hãy sao lưu và xử lý dữ liệu trùng trước khi nâng cấp database.");
+            }
+            ExecuteNonQuery(connection,
+                "CREATE UNIQUE INDEX IF NOT EXISTS UX_Bill_OneUnpaidPerTable " +
+                "ON Bill(IdTable) WHERE Status = 0;");
+        }
+
+        private static void InsertSampleDataIfEmpty(SQLiteConnection connection)
+        {
+            // Chỉ seed khi TẤT CẢ bảng dữ liệu đều trống.
+            // Tránh trường hợp tài khoản bị xóa nhưng dữ liệu khác còn tồn tại,
+            // hoặc seed dở dang gây lỗi UNIQUE/ghi đè dữ liệu người dùng.
+            string[] tables = { "Account", "Category", "Food", "TableFood", "Bill", "BillDetail" };
+            foreach (string tableName in tables)
+            {
+                // tableName là tên hằng do code định nghĩa, không lấy từ người dùng.
+                int records = Convert.ToInt32(ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM " + tableName + ";"));
+                if (records > 0) return;
             }
 
             string matKhauBam = PasswordHelper.Hash("123456");
@@ -336,11 +399,11 @@ namespace QuanLiQuanCoffe.DataAccess
                 @"INSERT INTO Bill (DateCheckIn, DateCheckOut, IdTable, Status, Discount) VALUES
                     ('2026-10-10 08:15:00', '2026-10-10 09:00:00', 1, 1, 0),
                     ('2026-10-12 14:20:00', '2026-10-12 15:10:00', 2, 1, 10);",
-                @"INSERT INTO BillDetail (IdBill, IdFood, Count) VALUES
-                    (1, 1, 2),
-                    (1, 2, 1),
-                    (2, 4, 1),
-                    (2, 8, 2);"
+                @"INSERT INTO BillDetail (IdBill, IdFood, Count, UnitPriceAtSale) VALUES
+                    (1, 1, 2, 20000),
+                    (1, 2, 1, 25000),
+                    (2, 4, 1, 35000),
+                    (2, 8, 2, 18000);"
             };
 
             int i;

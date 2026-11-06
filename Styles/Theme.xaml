@@ -32,51 +32,197 @@
     <SolidColorBrush x:Key="SidebarActiveBrush"
                  Color="#FF947052"/>
 
+
+    <!-- NÚT PHỤ: NỀN SÁNG, CHỮ TỐI -->
+
+    <ControlTemplate x:Key="RoundedNeutralTemplate"
+                 TargetType="Button">
+
+        <Border x:Name="Chrome"
+            CornerRadius="7"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}">
+
+            <ContentPresenter
+            Content="{TemplateBinding Content}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
+            Margin="{TemplateBinding Padding}"
+            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+            RecognizesAccessKey="True"/>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FFE1D1C1"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FFCDB49E"/>
+            </Trigger>
+
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="BorderBrush"
+                    Value="#FF6F4E37"/>
+                <Setter TargetName="Chrome"
+                    Property="BorderThickness"
+                    Value="2"/>
+            </Trigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Chrome"
+                    Property="Opacity"
+                    Value="0.5"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+    <!-- NÚT CHÍNH VÀ SIDEBAR: NỀN TỐI, CHỮ TRẮNG -->
+
+    <ControlTemplate x:Key="RoundedAccentTemplate"
+                 TargetType="Button">
+
+        <Border x:Name="Chrome"
+            CornerRadius="7"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}">
+
+            <ContentPresenter
+            Content="{TemplateBinding Content}"
+            ContentTemplate="{TemplateBinding ContentTemplate}"
+            Margin="{TemplateBinding Padding}"
+            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+            RecognizesAccessKey="True"/>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FF8A6046"/>
+            </Trigger>
+
+            <!-- Menu đang được chọn -->
+            <Trigger Property="Tag" Value="Selected">
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FF947052"/>
+            </Trigger>
+
+            <!-- Di chuột vào menu đang chọn -->
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="Tag" Value="Selected"/>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
+
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FFA67F60"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="Background"
+                    Value="#FF563B2C"/>
+            </Trigger>
+
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter TargetName="Chrome"
+                    Property="BorderBrush"
+                    Value="#FFE8C7AA"/>
+                <Setter TargetName="Chrome"
+                    Property="BorderThickness"
+                    Value="2"/>
+            </Trigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Chrome"
+                    Property="Opacity"
+                    Value="0.5"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
+    <!-- STYLE MẶC ĐỊNH CHO BUTTON -->
+
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="#FFF1E8DF"/>
+        <Setter Property="Foreground" Value="#FF4A3728"/>
+        <Setter Property="BorderBrush" Value="#FFD4C3B5"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Cursor" Value="Hand"/>
+
+        <Setter Property="Template"
+            Value="{StaticResource RoundedNeutralTemplate}"/>
+    </Style>
+
+
     <!-- 2. STYLE CHO SIDEBAR -->
 
     <Style x:Key="SidebarButtonStyle"
-           TargetType="Button">
+       TargetType="Button">
 
         <Setter Property="Height" Value="42"/>
         <Setter Property="Margin" Value="12,4"/>
         <Setter Property="Padding" Value="14,0"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+
+        <Setter Property="HorizontalContentAlignment"
+            Value="Left"/>
+
         <Setter Property="Background"
-                Value="{StaticResource SidebarButtonBrush}"/>
+            Value="{StaticResource SidebarButtonBrush}"/>
+
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Cursor" Value="Hand"/>
 
+        <Setter Property="Template"
+            Value="{StaticResource RoundedAccentTemplate}"/>
+
         <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background"
-                        Value="{StaticResource SidebarHoverBrush}"/>
-            </Trigger>
             <Trigger Property="Tag" Value="Selected">
-                <Setter Property="Background"
-                        Value="{StaticResource SidebarActiveBrush}"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontWeight"
+                    Value="SemiBold"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
+
     <!-- 3. STYLE NÚT CHỨC NĂNG -->
 
     <Style x:Key="PrimaryButtonStyle"
-           TargetType="Button">
+       TargetType="Button">
 
         <Setter Property="MinWidth" Value="84"/>
         <Setter Property="Height" Value="36"/>
         <Setter Property="Margin" Value="4,2"/>
         <Setter Property="Padding" Value="12,6"/>
+
         <Setter Property="Background"
-                Value="{StaticResource PrimaryBrush}"/>
+            Value="{StaticResource PrimaryBrush}"/>
+
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Cursor" Value="Hand"/>
+
+        <Setter Property="Template"
+            Value="{StaticResource RoundedAccentTemplate}"/>
     </Style>
+
 
     <!-- 4. STYLE Ô NHẬP LIỆU -->
 
@@ -209,6 +355,23 @@
         </Setter>
 
     </Style>
+
+
+    <Style x:Key="SecondaryButtonStyle"
+       TargetType="Button">
+
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="Background" Value="#FFEADFD5"/>
+        <Setter Property="Foreground" Value="#FF4A3728"/>
+        <Setter Property="BorderBrush" Value="#FFD4C3B5"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+
+        <Setter Property="Template"
+            Value="{StaticResource RoundedNeutralTemplate}"/>
+    </Style>
+
 
 
 </ResourceDictionary>

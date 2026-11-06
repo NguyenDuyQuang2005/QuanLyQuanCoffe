@@ -129,7 +129,7 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
                                         Margin="0,10,0,0">
                                 <Button Content="Giảm 1" Click="BtnGiamMon_Click"
-                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Style="{StaticResource SecondaryButtonStyle}"
                                         Background="#FFEADFD5" Foreground="#FF4A3728"/>
                                 <Button Content="Xóa món" Click="BtnXoaMon_Click"
                                         Style="{StaticResource PrimaryButtonStyle}"

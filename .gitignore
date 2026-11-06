@@ -30,3 +30,7 @@ coverage/
 *.db-wal
 *.db-shm
 *.db-journal
+# Local SQLite data (do not commit accounts / invoices)
+*.db
+*.sqlite
+*.sqlite3

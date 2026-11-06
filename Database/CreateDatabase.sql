@@ -71,6 +71,12 @@ CREATE TABLE IF NOT EXISTS BillDetail (
     IdBill INTEGER NOT NULL,
     IdFood INTEGER NOT NULL,
     Count  INTEGER NOT NULL DEFAULT 1 CHECK (Count > 0),
+    -- NULL cho hoa don cu chua biet gia luc ban
+    UnitPriceAtSale REAL CHECK (UnitPriceAtSale IS NULL OR UnitPriceAtSale >= 0),
     FOREIGN KEY (IdBill) REFERENCES Bill(Id) ON DELETE CASCADE,
     FOREIGN KEY (IdFood) REFERENCES Food(Id)
 );
+
+-- Bảo đảm mỗi bàn chỉ có một hóa đơn chưa thanh toán.
+CREATE UNIQUE INDEX IF NOT EXISTS UX_Bill_OneUnpaidPerTable
+    ON Bill(IdTable) WHERE Status = 0;

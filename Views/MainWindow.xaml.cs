@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Windows;
+using QuanLiQuanCoffe.DataAccess;
 using QuanLiQuanCoffe.Models;
 using System.Windows.Controls;
 
@@ -16,6 +19,7 @@ namespace QuanLiQuanCoffe.Views
             taiKhoanHienTai = account;
             ApDungPhanQuyen();
             CapNhatMenu(btnTrangChu, "Trang chủ");
+            NapThongKeTrangChu();
         }
 
         private void ApDungPhanQuyen()
@@ -134,8 +138,41 @@ namespace QuanLiQuanCoffe.Views
 
             // Đánh dấu nút Trang chủ
             CapNhatMenu(btnTrangChu, "Trang chủ");
+            NapThongKeTrangChu();
         }
 
+
+        private void NapThongKeTrangChu()
+        {
+            try
+            {
+                List<TableFood> ban = TableFoodDAO.GetAll();
+                int coKhach = 0;
+                int trong = 0;
+                foreach (TableFood item in ban)
+                {
+                    if (item.Status == TableFood.StatusCoKhach) coKhach++;
+                    else if (item.Status == TableFood.StatusTrong) trong++;
+                }
+
+                txtTongSoBan.Text = ban.Count.ToString();
+                txtBanCoKhach.Text = coKhach.ToString();
+                txtBanTrong.Text = trong.ToString();
+                txtLanCapNhat.Text = "Cập nhật: " + DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy");
+            }
+            catch (Exception ex)
+            {
+                txtTongSoBan.Text = txtBanCoKhach.Text = txtBanTrong.Text = "—";
+                txtLanCapNhat.Text = "Không tải được số liệu.";
+                MessageBox.Show("Lỗi đọc số bàn: " + ex.Message, "Lỗi Dashboard", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void BtnLamMoiTongQuan_Click(object sender, RoutedEventArgs e)
+        {
+            NapThongKeTrangChu();
+        }
 
         private void CapNhatMenu(Button nutMoi, string tieuDe)
         {

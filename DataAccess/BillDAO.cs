@@ -63,6 +63,8 @@ namespace QuanLiQuanCoffe.DataAccess
         /// </summary>
         public static int AddFoodToTable(int idTable, int idFood, int count)
         {
+            if (idTable <= 0 || idFood <= 0 || count <= 0)
+                throw new ArgumentException("Bàn, món và số lượng phải hợp lệ.");
             return DatabaseHelper.RunInTransaction(delegate(SQLiteConnection connection)
             {
                 Bill unpaid = GetUnpaidByTable(connection, idTable);
@@ -111,20 +113,23 @@ namespace QuanLiQuanCoffe.DataAccess
         {
             DatabaseHelper.RunInTransaction(delegate(SQLiteConnection connection)
             {
-                object countObj = DatabaseHelper.ExecuteScalar(
-                    connection,
-                    "SELECT COUNT(*) FROM BillDetail WHERE IdBill = @id;",
-                    DatabaseHelper.Param("@id", billId));
-                if (Convert.ToInt32(countObj) > 0)
-                {
-                    return false;
-                }
+                object validBill = DatabaseHelper.ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM Bill WHERE Id=@bill AND IdTable=@table AND Status=0;",
+                    DatabaseHelper.Param("@bill", billId),
+                    DatabaseHelper.Param("@table", idTable));
+                if (Convert.ToInt32(validBill) != 1) return false;
 
-                DatabaseHelper.ExecuteNonQuery(
-                    connection,
-                    "DELETE FROM Bill WHERE Id = @id AND Status = @unpaid;",
-                    DatabaseHelper.Param("@id", billId),
-                    DatabaseHelper.Param("@unpaid", StatusChuaThanhToan));
+                object detailCount = DatabaseHelper.ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM BillDetail WHERE IdBill=@bill;",
+                    DatabaseHelper.Param("@bill", billId));
+                if (Convert.ToInt32(detailCount) != 0) return false;
+
+                int deleted = DatabaseHelper.ExecuteNonQuery(connection,
+                    "DELETE FROM Bill WHERE Id=@bill AND IdTable=@table AND Status=0;",
+                    DatabaseHelper.Param("@bill", billId),
+                    DatabaseHelper.Param("@table", idTable));
+                if (deleted != 1) return false;
+
                 TableFoodDAO.UpdateStatus(connection, idTable, TableFood.StatusTrong);
                 return true;
             });
@@ -132,14 +137,36 @@ namespace QuanLiQuanCoffe.DataAccess
 
         public static bool CheckOutAndFreeTable(int billId, int idTable, int discount)
         {
+            if (discount < 0 || discount > 100)
+                throw new ArgumentOutOfRangeException("discount", "Giảm giá phải trong khoảng 0-100%.");
+
             return DatabaseHelper.RunInTransaction(delegate(SQLiteConnection connection)
             {
-                if (!CheckOut(connection, billId, discount))
-                {
-                    return false;
-                }
+                // Cần đúng hóa đơn mở của đúng bàn, không thể thanh toán hộ bàn khác.
+                int valid = Convert.ToInt32(DatabaseHelper.ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM Bill WHERE Id=@bill AND IdTable=@table AND Status=@unpaid;",
+                    DatabaseHelper.Param("@bill", billId),
+                    DatabaseHelper.Param("@table", idTable),
+                    DatabaseHelper.Param("@unpaid", StatusChuaThanhToan)));
+                if (valid != 1) return false;
 
-                TableFoodDAO.UpdateStatus(connection, idTable, TableFood.StatusTrong);
+                int detailCount = Convert.ToInt32(DatabaseHelper.ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM BillDetail WHERE IdBill=@bill;",
+                    DatabaseHelper.Param("@bill", billId)));
+                if (detailCount <= 0)
+                    throw new InvalidOperationException("Không thể thanh toán hóa đơn chưa có món.");
+
+                int missing = Convert.ToInt32(DatabaseHelper.ExecuteScalar(connection,
+                    "SELECT COUNT(*) FROM BillDetail WHERE IdBill=@bill " +
+                    "AND UnitPriceAtSale IS NULL;",
+                    DatabaseHelper.Param("@bill", billId)));
+                if (missing != 0)
+                    throw new InvalidOperationException(
+                        "Hóa đơn còn món thiếu đơn giá lịch sử. Không thể thanh toán chính xác.");
+
+                if (!CheckOut(connection, billId, discount)) return false;
+                if (!TableFoodDAO.UpdateStatus(connection, idTable, TableFood.StatusTrong))
+                    throw new InvalidOperationException("Không cập nhật được trạng thái bàn.");
                 return true;
             });
         }
@@ -161,11 +188,11 @@ namespace QuanLiQuanCoffe.DataAccess
 
             string sql =
                 "SELECT b.Id, b.DateCheckOut, t.Name AS TableName, b.Discount, " +
-                "SUM(f.Price * d.Count) AS SubTotal " +
+                "SUM(d.UnitPriceAtSale * d.Count) AS SubTotal, " +
+                "SUM(CASE WHEN d.UnitPriceAtSale IS NULL THEN 1 ELSE 0 END) AS MissingPriceCount " +
                 "FROM Bill b " +
                 "INNER JOIN TableFood t ON b.IdTable = t.Id " +
                 "INNER JOIN BillDetail d ON d.IdBill = b.Id " +
-                "INNER JOIN Food f ON d.IdFood = f.Id " +
                 "WHERE b.Status = @status AND " + dieuKienNgay + " " +
                 "GROUP BY b.Id, b.DateCheckOut, t.Name, b.Discount " +
                 "ORDER BY b.DateCheckOut;";
@@ -180,6 +207,14 @@ namespace QuanLiQuanCoffe.DataAccess
             for (i = 0; i < table.Rows.Count; i++)
             {
                 DataRow row = table.Rows[i];
+                if (Convert.ToInt32(row["MissingPriceCount"]) > 0)
+                {
+                    throw new InvalidOperationException(
+                        "Hóa đơn " + row["Id"] + " chưa có đủ đơn giá lịch sử. " +
+                        "Không thể tính doanh thu kỳ này chính xác. " +
+                        "Hãy kiểm tra dữ liệu cũ hoặc tạo lại database seed thử nghiệm.");
+                }
+
                 RevenueItem item = new RevenueItem();
                 item.BillId = Convert.ToInt32(row["Id"]);
                 item.DateCheckOut = row["DateCheckOut"].ToString();

@@ -42,8 +42,8 @@ INSERT INTO Bill (DateCheckIn, DateCheckOut, IdTable, Status, Discount) VALUES
     ('2026-10-10 08:15:00', '2026-10-10 09:00:00', 1, 1, 0),
     ('2026-10-12 14:20:00', '2026-10-12 15:10:00', 2, 1, 10);
 
-INSERT INTO BillDetail (IdBill, IdFood, Count) VALUES
-    (1, 1, 2),
-    (1, 2, 1),
-    (2, 4, 1),
-    (2, 8, 2);
+INSERT INTO BillDetail (IdBill, IdFood, Count, UnitPriceAtSale) VALUES
+    (1, 1, 2, 20000),
+    (1, 2, 1, 25000),
+    (2, 4, 1, 35000),
+    (2, 8, 2, 18000);
